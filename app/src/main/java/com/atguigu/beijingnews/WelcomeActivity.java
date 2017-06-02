@@ -1,13 +1,17 @@
 package com.atguigu.beijingnews;
 
-import android.support.v7.app.AppCompatActivity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.RotateAnimation;
 import android.view.animation.ScaleAnimation;
 import android.widget.RelativeLayout;
+
+import com.atguigu.beijingnews.activity.GuideActivity;
+import com.atguigu.beijingnews.utils.CacheUtils;
 
 public class WelcomeActivity extends AppCompatActivity {
 
@@ -18,7 +22,11 @@ public class WelcomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_welcome);
         activity_welcome = (RelativeLayout)findViewById(R.id.activity_welcome);
 
+        setAnimation();
 
+    }
+
+    private void setAnimation() {
         RotateAnimation ra  = new RotateAnimation(0,360,RotateAnimation.RELATIVE_TO_SELF,0.5f,RotateAnimation.RELATIVE_TO_SELF,0.5f);
         ra.setDuration(2000);
         ra.setFillAfter(true);
@@ -39,7 +47,6 @@ public class WelcomeActivity extends AppCompatActivity {
         activity_welcome.startAnimation(set);
 
         set.setAnimationListener( new MyAnimationListener());
-
     }
 
     class MyAnimationListener implements Animation.AnimationListener{
@@ -51,7 +58,15 @@ public class WelcomeActivity extends AppCompatActivity {
 
         @Override
         public void onAnimationEnd(Animation animation) {
-
+            boolean isStartMain =  CacheUtils.getBoolean(WelcomeActivity.this,"start_main");
+            if(isStartMain){
+                Intent intent = new Intent(WelcomeActivity.this,MainActivity.class);
+                startActivity(intent);
+            }else {
+                Intent intent = new Intent(WelcomeActivity.this,GuideActivity.class);
+                startActivity(intent);
+            }
+            finish();
         }
 
         @Override
