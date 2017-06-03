@@ -75,6 +75,9 @@ public class ContentFragment extends BaseFragment {
 
             @Override
             public void onPageSelected(int position) {
+
+                pagers.get(position).initData();
+
                 if(position == 1) {
                     MainActivity main = (MainActivity) context;
                     main.getSlidingMenu().setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
@@ -90,6 +93,8 @@ public class ContentFragment extends BaseFragment {
 
             }
         });
+
+        pagers.get(0).initData();
 
         rgMain.check(R.id.rb_home);
     }
