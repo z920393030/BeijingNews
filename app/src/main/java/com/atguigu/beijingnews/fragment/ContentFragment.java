@@ -6,11 +6,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioGroup;
 
+import com.atguigu.beijingnews.MainActivity;
 import com.atguigu.beijingnews.R;
 import com.atguigu.beijingnews.pager.BasePager;
 import com.atguigu.beijingnews.pager.HomePager;
 import com.atguigu.beijingnews.pager.NewsPager;
 import com.atguigu.beijingnews.pager.SettingPager;
+import com.atguigu.beijingnews.view.NoViewPager;
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 import java.util.ArrayList;
 
@@ -24,7 +27,7 @@ import butterknife.InjectView;
 public class ContentFragment extends BaseFragment {
 
     @InjectView(R.id.vp)
-    ViewPager vp;
+    NoViewPager vp;
     @InjectView(R.id.rg_main)
     RadioGroup rgMain;
 
@@ -63,6 +66,31 @@ public class ContentFragment extends BaseFragment {
                 }
             }
         });
+
+        vp.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if(position == 1) {
+                    MainActivity main = (MainActivity) context;
+                    main.getSlidingMenu().setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+                }else {
+                    MainActivity main = (MainActivity) context;
+                    main.getSlidingMenu().setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);
+                }
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
         rgMain.check(R.id.rb_home);
     }
 
