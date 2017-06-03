@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.atguigu.beijingnews.MainActivity;
 import com.atguigu.beijingnews.R;
 import com.atguigu.beijingnews.domain.NewsCenterBean;
+import com.atguigu.beijingnews.pager.NewsPager;
 
 import java.util.List;
 
@@ -34,6 +35,8 @@ public class LeftMenuFragment extends BaseFragment {
                 adapter.notifyDataSetChanged();
                 MainActivity mainActivity = (MainActivity) context;
                 mainActivity.getSlidingMenu().toggle();
+
+                switchPager(prePosition);
             }
         });
         return listView;
@@ -48,6 +51,15 @@ public class LeftMenuFragment extends BaseFragment {
         this.datas = datas;
         adapter = new LeftMenuAdapter();
         listView.setAdapter(adapter);
+
+        switchPager(prePosition);
+    }
+
+    private void switchPager(int postion) {
+        MainActivity mainActivity = (MainActivity) context;
+        ContentFragment contentFragment = mainActivity.getContentFragment();
+        NewsPager newsPager = contentFragment.getNewsPager();
+        newsPager.swichPager(postion);
     }
 
     private class LeftMenuAdapter extends BaseAdapter{
@@ -75,8 +87,7 @@ public class LeftMenuFragment extends BaseFragment {
                 textView.setEnabled(false);
             }
 
-            NewsCenterBean.DataBean dataBean = datas.get(position);
-            textView.setText(dataBean.getTitle());
+            textView.setText(datas.get(position).getTitle());
             return textView;
         }
     }

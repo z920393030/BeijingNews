@@ -106,6 +106,10 @@ public class ContentFragment extends BaseFragment {
         ButterKnife.reset(this);
     }
 
+    public NewsPager getNewsPager() {
+        return (NewsPager) pagers.get(1);
+    }
+
     private class MyAdapter extends PagerAdapter {
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
