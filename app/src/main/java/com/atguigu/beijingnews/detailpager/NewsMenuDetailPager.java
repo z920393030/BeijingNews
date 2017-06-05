@@ -7,9 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 
+import com.atguigu.beijingnews.MainActivity;
 import com.atguigu.beijingnews.R;
 import com.atguigu.beijingnews.base.MenuDetailBasePager;
 import com.atguigu.beijingnews.domain.NewsCenterBean;
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.viewpagerindicator.TabPageIndicator;
 
 import java.util.ArrayList;
@@ -49,6 +51,29 @@ public class NewsMenuDetailPager extends MenuDetailBasePager {
                 vp.setCurrentItem(vp.getCurrentItem()+1);
             }
         });
+        indicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                if(position==0){
+                    MainActivity mainActivity = (MainActivity) context;
+                    mainActivity.getSlidingMenu().setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+                }else {
+                    MainActivity mainActivity = (MainActivity) context;
+                    mainActivity.getSlidingMenu().setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);
+                }
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
         return view;
     }
 
