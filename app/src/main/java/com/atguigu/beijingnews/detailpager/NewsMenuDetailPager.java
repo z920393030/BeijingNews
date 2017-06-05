@@ -5,6 +5,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 
 import com.atguigu.beijingnews.R;
 import com.atguigu.beijingnews.base.MenuDetailBasePager;
@@ -23,6 +24,7 @@ public class NewsMenuDetailPager extends MenuDetailBasePager {
     private ViewPager vp;
     private TabPageIndicator indicator;
     private List<TabDetailPager> tabDetailPagers;
+    private ImageButton ib_next;
 
     public NewsMenuDetailPager(Context context) {
         super(context);
@@ -39,6 +41,14 @@ public class NewsMenuDetailPager extends MenuDetailBasePager {
         View view = View.inflate(context, R.layout.pager_news_menu_detail,null);
         vp = (ViewPager) view.findViewById(R.id.vp);
         indicator = (TabPageIndicator) view.findViewById(R.id.indicator);
+        ib_next = (ImageButton) view.findViewById(R.id.ib_next);
+
+        ib_next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                vp.setCurrentItem(vp.getCurrentItem()+1);
+            }
+        });
         return view;
     }
 
