@@ -56,12 +56,12 @@
         "source": "C:\\Users\\My\\Desktop\\projeck\\BeijingNews\\SlidingMenu_library\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\24.2.1\\res\\drawable\\abc_seekbar_thumb_material.xml"
     },
     {
-        "merged": "C:\\Users\\My\\Desktop\\projeck\\BeijingNews\\SlidingMenu_library\\build\\intermediates\\res\\merged\\debug\\drawable\\abc_switch_thumb_material.xml",
-        "source": "C:\\Users\\My\\Desktop\\projeck\\BeijingNews\\SlidingMenu_library\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\24.2.1\\res\\drawable\\abc_switch_thumb_material.xml"
-    },
-    {
         "merged": "C:\\Users\\My\\Desktop\\projeck\\BeijingNews\\SlidingMenu_library\\build\\intermediates\\res\\merged\\debug\\drawable\\abc_tab_indicator_material.xml",
         "source": "C:\\Users\\My\\Desktop\\projeck\\BeijingNews\\SlidingMenu_library\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\24.2.1\\res\\drawable\\abc_tab_indicator_material.xml"
+    },
+    {
+        "merged": "C:\\Users\\My\\Desktop\\projeck\\BeijingNews\\SlidingMenu_library\\build\\intermediates\\res\\merged\\debug\\drawable\\abc_switch_thumb_material.xml",
+        "source": "C:\\Users\\My\\Desktop\\projeck\\BeijingNews\\SlidingMenu_library\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\24.2.1\\res\\drawable\\abc_switch_thumb_material.xml"
     },
     {
         "merged": "C:\\Users\\My\\Desktop\\projeck\\BeijingNews\\SlidingMenu_library\\build\\intermediates\\res\\merged\\debug\\drawable\\abc_seekbar_tick_mark_material.xml",

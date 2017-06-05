@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import com.atguigu.beijingnews.R;
 import com.atguigu.beijingnews.base.MenuDetailBasePager;
 import com.atguigu.beijingnews.domain.NewsCenterBean;
+import com.viewpagerindicator.TabPageIndicator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +21,7 @@ import java.util.List;
 public class NewsMenuDetailPager extends MenuDetailBasePager {
     private List<NewsCenterBean.DataBean.ChildrenBean> datas;
     private ViewPager vp;
+    private TabPageIndicator indicator;
     private List<TabDetailPager> tabDetailPagers;
 
     public NewsMenuDetailPager(Context context) {
@@ -36,6 +38,7 @@ public class NewsMenuDetailPager extends MenuDetailBasePager {
     public View initView() {
         View view = View.inflate(context, R.layout.pager_news_menu_detail,null);
         vp = (ViewPager) view.findViewById(R.id.vp);
+        indicator = (TabPageIndicator) view.findViewById(R.id.indicator);
         return view;
     }
 
@@ -49,12 +52,19 @@ public class NewsMenuDetailPager extends MenuDetailBasePager {
         }
 
         vp.setAdapter(new NewsMenuDetailPagerAdapter());
+
+        indicator.setViewPager(vp);
     }
 
     private class NewsMenuDetailPagerAdapter extends PagerAdapter {
         @Override
         public int getCount() {
             return tabDetailPagers == null ? 0 : tabDetailPagers.size();
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return datas.get(position).getTitle();
         }
 
         @Override
