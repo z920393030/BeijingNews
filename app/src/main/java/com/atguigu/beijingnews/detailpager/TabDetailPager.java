@@ -3,6 +3,7 @@ package com.atguigu.beijingnews.detailpager;
 import android.content.Context;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.atguigu.beijingnews.R;
 import com.atguigu.beijingnews.base.MenuDetailBasePager;
@@ -21,6 +23,8 @@ import com.atguigu.beijingnews.view.HorizontalScrollViewPager;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -39,13 +43,17 @@ public class TabDetailPager extends MenuDetailBasePager {
     HorizontalScrollViewPager viewpager;
     TextView tvTitle;
     LinearLayout llPointGroup;
-    @InjectView(R.id.lv)
+    @InjectView(R.id.pull_refresh_list)
+    PullToRefreshListView pull_refresh_list;
     ListView lv;
     private String url;
     private List<TabDetailPagerBean.DataBean.TopnewsBean> topnews;
     private int prePosition = 0;
     private List<TabDetailPagerBean.DataBean.NewsBean> newsBeanList;
     private ListAdapter adapter;
+
+    private String moreUrl;
+    private boolean isLoadingMore = false;
 
     public TabDetailPager(Context context, NewsCenterBean.DataBean.ChildrenBean childrenBean) {
         super(context);
@@ -56,6 +64,7 @@ public class TabDetailPager extends MenuDetailBasePager {
     public View initView() {
         View view = View.inflate(context, R.layout.pager_tab_detail, null);
         ButterKnife.inject(this, view);
+        lv = pull_refresh_list.getRefreshableView();
         View view1 = View.inflate(context, R.layout.tab_detail_topnews, null);
         viewpager = (HorizontalScrollViewPager) view1.findViewById(R.id.viewpager);
         tvTitle = (TextView) view1.findViewById(R.id.tv_title);
@@ -84,6 +93,24 @@ public class TabDetailPager extends MenuDetailBasePager {
             }
         });
 
+        pull_refresh_list.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
+            @Override
+            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
+                isLoadingMore = false;
+                getDataFromNet(url);
+            }
+
+            @Override
+            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
+                if(!TextUtils.isEmpty(moreUrl)){
+                    isLoadingMore = true;
+                    getDataFromNet(moreUrl);
+                }else {
+                    Toast.makeText(context, "没有更多数据了...", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
         return view;
     }
 
@@ -91,10 +118,10 @@ public class TabDetailPager extends MenuDetailBasePager {
     public void initData() {
         super.initData();
         url = ConstantUtils.BASE_URL + childrenBean.getUrl();
-        getDataFromNet();
+        getDataFromNet(url);
     }
 
-    private void getDataFromNet() {
+    private void getDataFromNet(String url) {
         OkHttpUtils
                 .get()
                 .url(url)
@@ -109,6 +136,7 @@ public class TabDetailPager extends MenuDetailBasePager {
                     @Override
                     public void onResponse(String response, int id) {
                         processData(response);
+                        pull_refresh_list.onRefreshComplete();
                     }
 
 
@@ -118,32 +146,40 @@ public class TabDetailPager extends MenuDetailBasePager {
 
     private void processData(String response) {
         TabDetailPagerBean bean = new Gson().fromJson(response, TabDetailPagerBean.class);
-        Log.e("TAG", "" + bean.getData().getNews().get(0).getTitle());
-        topnews = bean.getData().getTopnews();
-        viewpager.setAdapter(new MyAdapter());
-        tvTitle.setText(topnews.get(prePosition).getTitle());
-
-        llPointGroup.removeAllViews();
-
-        for (int i = 0; i < topnews.size(); i++) {
-            ImageView point = new ImageView(context);
-            point.setBackgroundResource(R.drawable.point_selector);
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(8, 8);
-            point.setLayoutParams(params);
-
-            if (i == 0) {
-                point.setEnabled(true);
-            } else {
-                point.setEnabled(false);
-                params.leftMargin = 8;
-            }
-            llPointGroup.addView(point);
+        String more = bean.getData().getMore();
+        if(!TextUtils.isEmpty(more)){
+            moreUrl = ConstantUtils.BASE_URL+more;
         }
+        if(!isLoadingMore){
+            topnews = bean.getData().getTopnews();
+            viewpager.setAdapter(new MyAdapter());
+            tvTitle.setText(topnews.get(prePosition).getTitle());
 
-        newsBeanList = bean.getData().getNews();
+            llPointGroup.removeAllViews();
 
-        adapter = new ListAdapter();
-        lv.setAdapter(adapter);
+            for (int i = 0; i < topnews.size(); i++) {
+                ImageView point = new ImageView(context);
+                point.setBackgroundResource(R.drawable.point_selector);
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(8, 8);
+                point.setLayoutParams(params);
+
+                if (i == 0) {
+                    point.setEnabled(true);
+                } else {
+                    point.setEnabled(false);
+                    params.leftMargin = 8;
+                }
+                llPointGroup.addView(point);
+            }
+            newsBeanList = bean.getData().getNews();
+
+            adapter = new ListAdapter();
+            lv.setAdapter(adapter);
+        }else {
+            isLoadingMore = false;
+            newsBeanList.addAll(bean.getData().getNews());
+            adapter.notifyDataSetChanged();
+        }
 
     }
 
