@@ -17,6 +17,7 @@ import com.atguigu.beijingnews.base.MenuDetailBasePager;
 import com.atguigu.beijingnews.domain.NewsCenterBean;
 import com.atguigu.beijingnews.domain.TabDetailPagerBean;
 import com.atguigu.beijingnews.utils.ConstantUtils;
+import com.atguigu.beijingnews.view.HorizontalScrollViewPager;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
@@ -35,7 +36,7 @@ import okhttp3.Call;
 
 public class TabDetailPager extends MenuDetailBasePager {
     private final NewsCenterBean.DataBean.ChildrenBean childrenBean;
-    ViewPager viewpager;
+    HorizontalScrollViewPager viewpager;
     TextView tvTitle;
     LinearLayout llPointGroup;
     @InjectView(R.id.lv)
@@ -56,7 +57,7 @@ public class TabDetailPager extends MenuDetailBasePager {
         View view = View.inflate(context, R.layout.pager_tab_detail, null);
         ButterKnife.inject(this, view);
         View view1 = View.inflate(context, R.layout.tab_detail_topnews, null);
-        viewpager = (ViewPager) view1.findViewById(R.id.viewpager);
+        viewpager = (HorizontalScrollViewPager) view1.findViewById(R.id.viewpager);
         tvTitle = (TextView) view1.findViewById(R.id.tv_title);
         llPointGroup = (LinearLayout) view1.findViewById(R.id.ll_point_group);
 
@@ -66,15 +67,15 @@ public class TabDetailPager extends MenuDetailBasePager {
         viewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
+                llPointGroup.getChildAt(prePosition).setEnabled(false);
+                llPointGroup.getChildAt(position).setEnabled(true);
+                prePosition = position;
             }
 
             @Override
             public void onPageSelected(int position) {
                 tvTitle.setText(topnews.get(position).getTitle());
-                llPointGroup.getChildAt(prePosition).setEnabled(false);
-                llPointGroup.getChildAt(position).setEnabled(true);
-                prePosition = position;
+
             }
 
             @Override
