@@ -1,5 +1,9 @@
 [
     {
+        "merged": "C:\\Users\\My\\Desktop\\projeck\\BeijingNews\\ViewPagerIndicato_library\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\vpi__textcolor_theme.xml",
+        "source": "C:\\Users\\My\\Desktop\\projeck\\BeijingNews\\ViewPagerIndicato_library\\build\\intermediates\\bundles\\debug\\res\\drawable\\vpi__textcolor_theme.xml"
+    },
+    {
         "merged": "C:\\Users\\My\\Desktop\\projeck\\BeijingNews\\ViewPagerIndicato_library\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\vpi__tab_indicator.xml",
         "source": "C:\\Users\\My\\Desktop\\projeck\\BeijingNews\\ViewPagerIndicato_library\\build\\intermediates\\bundles\\debug\\res\\drawable\\vpi__tab_indicator.xml"
     }

@@ -16,6 +16,10 @@
         "source": "C:\\Users\\My\\Desktop\\projeck\\BeijingNews\\ViewPagerIndicato_library\\build\\intermediates\\bundles\\debug\\res\\drawable-hdpi-v4\\vpi__tab_selected_pressed_holo.9.png"
     },
     {
+        "merged": "C:\\Users\\My\\Desktop\\projeck\\BeijingNews\\ViewPagerIndicato_library\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-hdpi-v4\\news_tab_item_bg_select.9.png",
+        "source": "C:\\Users\\My\\Desktop\\projeck\\BeijingNews\\ViewPagerIndicato_library\\build\\intermediates\\bundles\\debug\\res\\drawable-hdpi-v4\\news_tab_item_bg_select.9.png"
+    },
+    {
         "merged": "C:\\Users\\My\\Desktop\\projeck\\BeijingNews\\ViewPagerIndicato_library\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-hdpi-v4\\vpi__tab_selected_holo.9.png",
         "source": "C:\\Users\\My\\Desktop\\projeck\\BeijingNews\\ViewPagerIndicato_library\\build\\intermediates\\bundles\\debug\\res\\drawable-hdpi-v4\\vpi__tab_selected_holo.9.png"
     },
