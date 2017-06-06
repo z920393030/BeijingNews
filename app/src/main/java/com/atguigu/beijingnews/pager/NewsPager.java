@@ -100,7 +100,7 @@ public class NewsPager extends BasePager {
         basePagers = new ArrayList<>();
         basePagers.add(new NewsMenuDetailPager(context,datas.get(0).getChildren()));
         basePagers.add(new TopicMenuDetailPager(context));
-        basePagers.add(new PhotosMenuDetailPager(context));
+        basePagers.add(new PhotosMenuDetailPager(context,datas.get(2)));
         basePagers.add(new InteractMenuDetailPager(context));
         basePagers.add(new VoteMenuDetailPager(context));
 
@@ -159,10 +159,18 @@ public class NewsPager extends BasePager {
     }
 
     public void swichPager(int prePosition) {
+
+        tv_title.setText(datas.get(prePosition).getTitle());
+
         MenuDetailBasePager basePager = basePagers.get(prePosition);
         View rootView = basePager.rootView;
         fl_content.removeAllViews();
         fl_content.addView(rootView);
         basePager.initData();
+        if(prePosition ==2){
+            ib_switch_list_grid.setVisibility(View.VISIBLE);
+        }else {
+            ib_switch_list_grid.setVisibility(View.GONE);
+        }
     }
 }
