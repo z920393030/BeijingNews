@@ -169,6 +169,13 @@ public class NewsPager extends BasePager {
         basePager.initData();
         if(prePosition ==2){
             ib_switch_list_grid.setVisibility(View.VISIBLE);
+            ib_switch_list_grid.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    PhotosMenuDetailPager basePager1 = (PhotosMenuDetailPager) basePagers.get(2);
+                    basePager1.swichListAndGrid(ib_switch_list_grid);
+                }
+            });
         }else {
             ib_switch_list_grid.setVisibility(View.GONE);
         }

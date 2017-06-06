@@ -1,9 +1,11 @@
 package com.atguigu.beijingnews.detailpager;
 
 import android.content.Context;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -90,6 +92,19 @@ public class PhotosMenuDetailPager extends MenuDetailBasePager {
             recyclerview.setLayoutManager(new LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false));
         }else {
             progressbar.setVisibility(View.VISIBLE);
+        }
+    }
+    private boolean isShowList = true;
+
+    public void swichListAndGrid(ImageButton iv) {
+        if(isShowList){
+            recyclerview.setLayoutManager(new GridLayoutManager(context,2,GridLayoutManager.VERTICAL,false));
+            isShowList = false;
+            iv.setImageResource(R.drawable.icon_pic_list_type);
+        }else {
+            recyclerview.setLayoutManager(new LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false));
+            isShowList = true;
+            iv.setImageResource(R.drawable.icon_pic_grid_type);
         }
     }
 }
