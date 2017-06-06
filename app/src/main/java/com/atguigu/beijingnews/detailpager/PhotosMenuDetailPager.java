@@ -1,13 +1,14 @@
 package com.atguigu.beijingnews.detailpager;
 
 import android.content.Context;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.atguigu.beijingnews.R;
 import com.atguigu.beijingnews.adapter.PhotosMenuDetailPagerAdapater;
@@ -32,10 +33,11 @@ import okhttp3.Call;
 public class PhotosMenuDetailPager extends MenuDetailBasePager {
     private final NewsCenterBean.DataBean dataBean;
     @InjectView(R.id.recyclerview)
-    android.support.v7.widget.RecyclerView recyclerview;
+    RecyclerView recyclerview;
     @InjectView(R.id.progressbar)
     ProgressBar progressbar;
-    private TextView textView;
+    @InjectView(R.id.refresh_layout)
+    SwipeRefreshLayout refreshLayout;
     private String url;
     private List<PhotosMenuDetailPagerBean.DataBean.NewsBean> datas;
     private PhotosMenuDetailPagerAdapater adapater;
@@ -48,7 +50,13 @@ public class PhotosMenuDetailPager extends MenuDetailBasePager {
     @Override
     public View initView() {
         View view = View.inflate(context, R.layout.pager_photos_menu_detail, null);
-        ButterKnife.inject(this,view);
+        ButterKnife.inject(this, view);
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getDataFromNet(url);
+            }
+        });
         return view;
     }
 
@@ -85,24 +93,26 @@ public class PhotosMenuDetailPager extends MenuDetailBasePager {
     private void processData(String json) {
         PhotosMenuDetailPagerBean bean = new Gson().fromJson(json, PhotosMenuDetailPagerBean.class);
         datas = bean.getData().getNews();
-        if(datas != null && datas.size() >0){
+        if (datas != null && datas.size() > 0) {
             progressbar.setVisibility(View.GONE);
-            adapater = new PhotosMenuDetailPagerAdapater(context,datas);
+            adapater = new PhotosMenuDetailPagerAdapater(context, datas);
             recyclerview.setAdapter(adapater);
-            recyclerview.setLayoutManager(new LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false));
-        }else {
+            recyclerview.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
+        } else {
             progressbar.setVisibility(View.VISIBLE);
         }
+        refreshLayout.setRefreshing(false);
     }
+
     private boolean isShowList = true;
 
     public void swichListAndGrid(ImageButton iv) {
-        if(isShowList){
-            recyclerview.setLayoutManager(new GridLayoutManager(context,2,GridLayoutManager.VERTICAL,false));
+        if (isShowList) {
+            recyclerview.setLayoutManager(new GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false));
             isShowList = false;
             iv.setImageResource(R.drawable.icon_pic_list_type);
-        }else {
-            recyclerview.setLayoutManager(new LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false));
+        } else {
+            recyclerview.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
             isShowList = true;
             iv.setImageResource(R.drawable.icon_pic_grid_type);
         }
