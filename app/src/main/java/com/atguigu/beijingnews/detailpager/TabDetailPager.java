@@ -1,12 +1,14 @@
 package com.atguigu.beijingnews.detailpager;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -19,6 +21,7 @@ import com.atguigu.beijingnews.base.MenuDetailBasePager;
 import com.atguigu.beijingnews.domain.NewsCenterBean;
 import com.atguigu.beijingnews.domain.TabDetailPagerBean;
 import com.atguigu.beijingnews.view.HorizontalScrollViewPager;
+import com.atguigu.newsbeijing_library.utils.CacheUtils;
 import com.atguigu.newsbeijing_library.utils.ConstantUtils;
 import com.atguigu.newsbeijing_library.utils.DensityUtil;
 import com.bumptech.glide.Glide;
@@ -41,6 +44,7 @@ import okhttp3.Call;
  */
 
 public class TabDetailPager extends MenuDetailBasePager {
+    public static final String READ_ID_ARRAY = "read_id_array";
     private final NewsCenterBean.DataBean.ChildrenBean childrenBean;
     HorizontalScrollViewPager viewpager;
     TextView tvTitle;
@@ -76,7 +80,19 @@ public class TabDetailPager extends MenuDetailBasePager {
 
         AddSoundListener();
 
-        
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                int realPosition = position - 2;
+                TabDetailPagerBean.DataBean.NewsBean newsBean = newsBeanList.get(realPosition);
+                String idArray = CacheUtils.getString(context, READ_ID_ARRAY);
+                if (!idArray.contains(newsBean.getId() + "")) {
+                    idArray = idArray + newsBean.getId() + ",";
+                    CacheUtils.putString(context, READ_ID_ARRAY, idArray);
+                    adapter.notifyDataSetChanged();
+                }
+            }
+        });
 
         viewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -107,10 +123,10 @@ public class TabDetailPager extends MenuDetailBasePager {
 
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-                if(!TextUtils.isEmpty(moreUrl)){
+                if (!TextUtils.isEmpty(moreUrl)) {
                     isLoadingMore = true;
                     getDataFromNet(moreUrl);
-                }else {
+                } else {
                     Toast.makeText(context, "没有更多数据了...", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -160,10 +176,10 @@ public class TabDetailPager extends MenuDetailBasePager {
     private void processData(String response) {
         TabDetailPagerBean bean = new Gson().fromJson(response, TabDetailPagerBean.class);
         String more = bean.getData().getMore();
-        if(!TextUtils.isEmpty(more)){
-            moreUrl = ConstantUtils.BASE_URL+more;
+        if (!TextUtils.isEmpty(more)) {
+            moreUrl = ConstantUtils.BASE_URL + more;
         }
-        if(!isLoadingMore){
+        if (!isLoadingMore) {
             topnews = bean.getData().getTopnews();
             viewpager.setAdapter(new MyAdapter());
             tvTitle.setText(topnews.get(prePosition).getTitle());
@@ -173,14 +189,14 @@ public class TabDetailPager extends MenuDetailBasePager {
             for (int i = 0; i < topnews.size(); i++) {
                 ImageView point = new ImageView(context);
                 point.setBackgroundResource(R.drawable.point_selector);
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(DensityUtil.dip2px(context,8), DensityUtil.dip2px(context,8));
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(DensityUtil.dip2px(context, 8), DensityUtil.dip2px(context, 8));
                 point.setLayoutParams(params);
 
                 if (i == 0) {
                     point.setEnabled(true);
                 } else {
                     point.setEnabled(false);
-                    params.leftMargin = DensityUtil.dip2px(context,8);
+                    params.leftMargin = DensityUtil.dip2px(context, 8);
                 }
                 llPointGroup.addView(point);
             }
@@ -188,7 +204,7 @@ public class TabDetailPager extends MenuDetailBasePager {
 
             adapter = new ListAdapter();
             lv.setAdapter(adapter);
-        }else {
+        } else {
             isLoadingMore = false;
             newsBeanList.addAll(bean.getData().getNews());
             adapter.notifyDataSetChanged();
@@ -233,6 +249,13 @@ public class TabDetailPager extends MenuDetailBasePager {
                     .error(R.drawable.pic_item_list_default)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(viewHolder.ivIcon);
+
+            String idArray  = CacheUtils.getString(context,READ_ID_ARRAY);
+            if(idArray.contains(newsBean.getId()+"")) {
+                viewHolder.tvDesc.setTextColor(Color.GRAY);
+            }else {
+                viewHolder.tvDesc.setTextColor(Color.BLACK);
+            }
 
             return convertView;
         }
