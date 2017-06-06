@@ -1,4 +1,4 @@
-package com.atguigu.beijingnews.utils;
+package com.atguigu.newsbeijing_library.utils;
 
 import android.content.Context;
 

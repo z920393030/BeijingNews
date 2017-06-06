@@ -18,9 +18,9 @@ import com.atguigu.beijingnews.R;
 import com.atguigu.beijingnews.base.MenuDetailBasePager;
 import com.atguigu.beijingnews.domain.NewsCenterBean;
 import com.atguigu.beijingnews.domain.TabDetailPagerBean;
-import com.atguigu.beijingnews.utils.ConstantUtils;
-import com.atguigu.beijingnews.utils.DensityUtil;
 import com.atguigu.beijingnews.view.HorizontalScrollViewPager;
+import com.atguigu.newsbeijing_library.utils.ConstantUtils;
+import com.atguigu.newsbeijing_library.utils.DensityUtil;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
@@ -73,11 +73,10 @@ public class TabDetailPager extends MenuDetailBasePager {
         llPointGroup = (LinearLayout) view1.findViewById(R.id.ll_point_group);
 
         lv.addHeaderView(view1);
-        /**
-         * Add Sound Event Listener
-         */
+
         AddSoundListener();
 
+        
 
         viewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override

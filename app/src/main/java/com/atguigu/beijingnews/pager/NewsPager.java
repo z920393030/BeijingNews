@@ -17,8 +17,8 @@ import com.atguigu.beijingnews.detailpager.TopicMenuDetailPager;
 import com.atguigu.beijingnews.detailpager.VoteMenuDetailPager;
 import com.atguigu.beijingnews.domain.NewsCenterBean;
 import com.atguigu.beijingnews.fragment.LeftMenuFragment;
-import com.atguigu.beijingnews.utils.CacheUtils;
-import com.atguigu.beijingnews.utils.ConstantUtils;
+import com.atguigu.newsbeijing_library.utils.CacheUtils;
+import com.atguigu.newsbeijing_library.utils.ConstantUtils;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 

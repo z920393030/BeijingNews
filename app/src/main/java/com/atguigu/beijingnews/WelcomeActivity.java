@@ -11,7 +11,7 @@ import android.view.animation.ScaleAnimation;
 import android.widget.RelativeLayout;
 
 import com.atguigu.beijingnews.activity.GuideActivity;
-import com.atguigu.beijingnews.utils.CacheUtils;
+import com.atguigu.newsbeijing_library.utils.CacheUtils;
 
 public class WelcomeActivity extends AppCompatActivity {
 
