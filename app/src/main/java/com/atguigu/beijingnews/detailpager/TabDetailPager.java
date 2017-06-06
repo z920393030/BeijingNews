@@ -19,12 +19,14 @@ import com.atguigu.beijingnews.base.MenuDetailBasePager;
 import com.atguigu.beijingnews.domain.NewsCenterBean;
 import com.atguigu.beijingnews.domain.TabDetailPagerBean;
 import com.atguigu.beijingnews.utils.ConstantUtils;
+import com.atguigu.beijingnews.utils.DensityUtil;
 import com.atguigu.beijingnews.view.HorizontalScrollViewPager;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.handmark.pulltorefresh.library.extras.SoundPullEventListener;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -71,6 +73,10 @@ public class TabDetailPager extends MenuDetailBasePager {
         llPointGroup = (LinearLayout) view1.findViewById(R.id.ll_point_group);
 
         lv.addHeaderView(view1);
+        /**
+         * Add Sound Event Listener
+         */
+        AddSoundListener();
 
 
         viewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -112,6 +118,14 @@ public class TabDetailPager extends MenuDetailBasePager {
         });
 
         return view;
+    }
+
+    private void AddSoundListener() {
+        SoundPullEventListener<ListView> soundListener = new SoundPullEventListener<ListView>(context);
+        soundListener.addSoundEvent(PullToRefreshBase.State.PULL_TO_REFRESH, R.raw.pull_event);
+        soundListener.addSoundEvent(PullToRefreshBase.State.RESET, R.raw.reset_sound);
+        soundListener.addSoundEvent(PullToRefreshBase.State.REFRESHING, R.raw.refreshing_sound);
+        pull_refresh_list.setOnPullEventListener(soundListener);
     }
 
     @Override
@@ -160,14 +174,14 @@ public class TabDetailPager extends MenuDetailBasePager {
             for (int i = 0; i < topnews.size(); i++) {
                 ImageView point = new ImageView(context);
                 point.setBackgroundResource(R.drawable.point_selector);
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(8, 8);
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(DensityUtil.dip2px(context,8), DensityUtil.dip2px(context,8));
                 point.setLayoutParams(params);
 
                 if (i == 0) {
                     point.setEnabled(true);
                 } else {
                     point.setEnabled(false);
-                    params.leftMargin = 8;
+                    params.leftMargin = DensityUtil.dip2px(context,8);
                 }
                 llPointGroup.addView(point);
             }
