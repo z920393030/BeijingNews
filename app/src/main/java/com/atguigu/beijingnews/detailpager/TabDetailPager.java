@@ -4,10 +4,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -63,6 +66,19 @@ public class TabDetailPager extends MenuDetailBasePager {
 
     private String moreUrl;
     private boolean isLoadingMore = false;
+
+    private InternalHandler handler;
+
+    class InternalHandler extends Handler {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            int item = (viewpager.getCurrentItem()+1)%topnews.size();
+            viewpager.setCurrentItem(item);
+            handler.postDelayed(new MyRunnable(),4000);
+        }
+    }
+
 
     public TabDetailPager(Context context, NewsCenterBean.DataBean.ChildrenBean childrenBean) {
         super(context);
@@ -121,6 +137,12 @@ public class TabDetailPager extends MenuDetailBasePager {
             @Override
             public void onPageScrollStateChanged(int state) {
 
+                if(state ==ViewPager.SCROLL_STATE_DRAGGING){
+                    handler.removeCallbacksAndMessages(null);
+                }else  if(state==ViewPager.SCROLL_STATE_IDLE){
+                    handler.removeCallbacksAndMessages(null);
+                    handler.postDelayed(new MyRunnable(),4000);
+                }
             }
         });
 
@@ -219,6 +241,12 @@ public class TabDetailPager extends MenuDetailBasePager {
             newsBeanList.addAll(bean.getData().getNews());
             adapter.notifyDataSetChanged();
         }
+        if(handler == null){
+            handler = new InternalHandler();
+        }
+        handler.removeCallbacksAndMessages(null);
+
+        handler.postDelayed(new MyRunnable(),4000);
 
     }
 
@@ -311,6 +339,21 @@ public class TabDetailPager extends MenuDetailBasePager {
                     .into(imageView);
             container.addView(imageView);
 
+            imageView.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    switch (event.getAction()){
+                        case MotionEvent.ACTION_DOWN:
+                            handler.removeCallbacksAndMessages(null);
+                            break;
+                        case MotionEvent.ACTION_UP:
+                            handler.postDelayed(new MyRunnable(),4000);
+                            break;
+                    }
+                    return true;
+                }
+            });
+
             return imageView;
         }
 
@@ -319,5 +362,12 @@ public class TabDetailPager extends MenuDetailBasePager {
             container.removeView((View) object);
         }
 
+    }
+
+    private class MyRunnable implements Runnable {
+        @Override
+        public void run() {
+            handler.sendEmptyMessage(0);
+        }
     }
 }
