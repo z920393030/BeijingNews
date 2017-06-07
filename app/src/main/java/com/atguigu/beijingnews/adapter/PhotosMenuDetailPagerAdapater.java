@@ -2,8 +2,12 @@ package com.atguigu.beijingnews.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -12,9 +16,9 @@ import android.widget.TextView;
 import com.atguigu.beijingnews.R;
 import com.atguigu.beijingnews.activity.PicassoSampleActivity;
 import com.atguigu.beijingnews.domain.PhotosMenuDetailPagerBean;
+import com.atguigu.newsbeijing_library.utils.BitmapCacheUtils;
 import com.atguigu.newsbeijing_library.utils.ConstantUtils;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.atguigu.newsbeijing_library.utils.NetCachUtils;
 
 import java.util.List;
 
@@ -28,11 +32,39 @@ import butterknife.InjectView;
 public class PhotosMenuDetailPagerAdapater extends RecyclerView.Adapter<PhotosMenuDetailPagerAdapater.MyViewHolder> {
     private final Context context;
     private final List<PhotosMenuDetailPagerBean.DataBean.NewsBean> datas;
+    private final RecyclerView recyclerview;
+
+    private BitmapCacheUtils bitmapCacheUtils;
+
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case NetCachUtils.SUCESS:
+                    Bitmap bitmap = (Bitmap) msg.obj;
+                    int position = msg.arg1;
+                    Log.e("TAG","请求图片成功=="+position);
+                    ImageView imageview = (ImageView) recyclerview.findViewWithTag(position);
+                    if(imageview != null && bitmap != null){
+                        imageview.setImageBitmap(bitmap);
+                    }
 
 
-    public PhotosMenuDetailPagerAdapater(Context context, List<PhotosMenuDetailPagerBean.DataBean.NewsBean> datas) {
+                    break;
+                case NetCachUtils.FAIL:
+                    position = msg.arg1;
+                    Log.e("TAG","请求图片失败=="+position);
+                    break;
+            }
+        }
+    };
+
+    public PhotosMenuDetailPagerAdapater(Context context, List<PhotosMenuDetailPagerBean.DataBean.NewsBean> datas, RecyclerView recyclerview) {
         this.context = context;
         this.datas = datas;
+        bitmapCacheUtils = new BitmapCacheUtils(handler);
+        this.recyclerview = recyclerview;
     }
 
 
@@ -48,12 +80,12 @@ public class PhotosMenuDetailPagerAdapater extends RecyclerView.Adapter<PhotosMe
         PhotosMenuDetailPagerBean.DataBean.NewsBean newsBean = datas.get(position);
         holder.tvTitle.setText(newsBean.getTitle());
         String imageUrl = ConstantUtils.BASE_URL + newsBean.getListimage();
-        Glide.with(context)
-                .load(imageUrl)
-                .placeholder(R.drawable.pic_item_list_default)
-                .error(R.drawable.pic_item_list_default)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(holder.ivIcon);
+
+        Bitmap bitmap = bitmapCacheUtils.getBitmap(imageUrl,position);
+        holder.ivIcon.setTag(position);
+        if(bitmap != null){
+            holder.ivIcon.setImageBitmap(bitmap);
+        }
     }
 
 
