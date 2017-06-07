@@ -10,10 +10,12 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/NewsBeijing_library" />
+            <option value="$PROJECT_DIR$/PhotoView_sample" />
             <option value="$PROJECT_DIR$/PullToRefresh_library" />
             <option value="$PROJECT_DIR$/SlidingMenu_library" />
             <option value="$PROJECT_DIR$/ViewPagerIndicato_library" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/photoview" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

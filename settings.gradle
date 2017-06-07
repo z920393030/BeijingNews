@@ -1,4 +1,4 @@
-include ':app', ':NewsBeijing_library'
+include ':app', ':NewsBeijing_library', ':PhotoView_sample', ':photoview'
 include ':SlidingMenu_library'
 include ':ViewPagerIndicato_library'
 include ':PullToRefresh_library'
