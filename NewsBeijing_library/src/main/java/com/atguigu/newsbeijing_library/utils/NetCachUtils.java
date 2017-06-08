@@ -22,12 +22,16 @@ public class NetCachUtils {
     private final Handler handler;
     private final ExecutorService executorService;
     private final LocalCachUtils localCachUtils;
+    private final MemoryCachUtils momenyCachUtils;
 
-    public NetCachUtils(Handler handler, LocalCachUtils localCachUtils) {
+    public NetCachUtils(Handler handler, LocalCachUtils localCachUtils,MemoryCachUtils momenyCachUtils) {
         this.handler = handler;
         this.localCachUtils = localCachUtils;
+        this.momenyCachUtils = momenyCachUtils;
         executorService = Executors.newFixedThreadPool(10);
     }
+
+
 
 
     public void getBitmapFromNet(String imageUrl, int position) {
@@ -61,6 +65,8 @@ public class NetCachUtils {
                     msg.what = SUCESS;
                     msg.arg1 = position;
                     handler.sendMessage(msg);
+
+                    momenyCachUtils.putBitmap2Memory(imageUrl,bitmap);
 
                     localCachUtils.putBitmap2Local(imageUrl,bitmap);
 

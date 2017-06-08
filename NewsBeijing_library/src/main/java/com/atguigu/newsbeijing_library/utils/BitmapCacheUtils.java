@@ -11,10 +11,12 @@ import android.util.Log;
 public class BitmapCacheUtils {
     private NetCachUtils netCachUtils;
     private LocalCachUtils localCachUtils;
+    private MemoryCachUtils memoryCachUtils;
 
     public BitmapCacheUtils(Handler handler){
-        localCachUtils = new LocalCachUtils();
-        netCachUtils = new NetCachUtils(handler, localCachUtils);
+        memoryCachUtils = new MemoryCachUtils();
+        localCachUtils = new LocalCachUtils(memoryCachUtils);
+        netCachUtils = new NetCachUtils(handler, localCachUtils,memoryCachUtils);
     }
 
     public Bitmap getBitmap(String imageUrl, int position) {

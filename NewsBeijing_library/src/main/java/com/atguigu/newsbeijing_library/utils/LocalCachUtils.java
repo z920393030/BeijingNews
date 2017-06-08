@@ -13,11 +13,18 @@ import java.io.FileOutputStream;
  */
 
 public class LocalCachUtils {
+
+    private final MemoryCachUtils momenyCachUtils;
+
+    public LocalCachUtils(MemoryCachUtils momenyCachUtils){
+        this.momenyCachUtils = momenyCachUtils;
+    }
+
     public void putBitmap2Local(String imageUrl, Bitmap bitmap) {
 
         try {
 
-            String dir = Environment.getExternalStorageDirectory() + "/beijingnews/";
+            String dir = Environment.getExternalStorageDirectory() + "/beijingnews";
             String fileName = MD5Encoder.encode(imageUrl);
             File file = new File(dir, fileName);
             File parentFile = file.getParentFile();
@@ -39,11 +46,14 @@ public class LocalCachUtils {
     public Bitmap getBitmap(String imageUrl){
 
         try {
-            String dir = Environment.getExternalStorageDirectory() + "/beijingnews/";
+            String dir = Environment.getExternalStorageDirectory() + "/beijingnews";
             String fileName = MD5Encoder.encode(imageUrl);
             File file = new File(dir, fileName);
             if (file.exists()) {
                 Bitmap bitmap = BitmapFactory.decodeStream(new FileInputStream(file));
+                if(bitmap!=null) {
+                    momenyCachUtils.putBitmap2Memory(imageUrl,bitmap);
+                }
                 return bitmap;
             }
         } catch (Exception e) {
