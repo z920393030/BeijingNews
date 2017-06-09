@@ -19,6 +19,10 @@ import com.atguigu.beijingnews.domain.PhotosMenuDetailPagerBean;
 import com.atguigu.newsbeijing_library.utils.BitmapCacheUtils;
 import com.atguigu.newsbeijing_library.utils.ConstantUtils;
 import com.atguigu.newsbeijing_library.utils.NetCachUtils;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 
 import java.util.List;
 
@@ -35,26 +39,28 @@ public class PhotosMenuDetailPagerAdapater extends RecyclerView.Adapter<PhotosMe
     private final RecyclerView recyclerview;
 
     private BitmapCacheUtils bitmapCacheUtils;
+    private DisplayImageOptions options;
 
-    private Handler handler = new Handler(){
+    private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            switch (msg.what){
+            switch (msg.what) {
                 case NetCachUtils.SUCESS:
                     Bitmap bitmap = (Bitmap) msg.obj;
                     int position = msg.arg1;
-                    Log.e("TAG","请求图片成功=="+position);
+                    Log.e("TAG", "请求图片成功==" + position);
                     ImageView imageview = (ImageView) recyclerview.findViewWithTag(position);
-                    if(imageview != null && bitmap != null){
+                    if (imageview != null && bitmap != null) {
                         imageview.setImageBitmap(bitmap);
+
                     }
 
 
                     break;
                 case NetCachUtils.FAIL:
                     position = msg.arg1;
-                    Log.e("TAG","请求图片失败=="+position);
+                    Log.e("TAG", "请求图片失败==" + position);
                     break;
             }
         }
@@ -65,6 +71,19 @@ public class PhotosMenuDetailPagerAdapater extends RecyclerView.Adapter<PhotosMe
         this.datas = datas;
         bitmapCacheUtils = new BitmapCacheUtils(handler);
         this.recyclerview = recyclerview;
+
+         options = new DisplayImageOptions.Builder()
+                .showImageOnLoading(R.drawable.pic_item_list_default) //设置图片在下载期间显示的图片
+                .showImageForEmptyUri(R.drawable.pic_item_list_default)//设置图片Uri为空或是错误的时候显示的图片
+                .showImageOnFail(R.drawable.pic_item_list_default)  //设置图片加载/解码过程中错误时候显示的图片
+                .cacheInMemory(true)//设置下载的图片是否缓存在内存中
+                .cacheOnDisk(true)
+                .considerExifParams(true)  //是否考虑JPEG图像EXIF参数（旋转，翻转）
+                .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)//设置图片以如何的编码方式显示
+                .bitmapConfig(Bitmap.Config.RGB_565)//设置图片的解码类型//
+                .displayer(new RoundedBitmapDisplayer(360))//是否设置为圆角，弧度为多少
+                //      .displayer(new FadeInBitmapDisplayer(100))//是否图片加载好后渐入的动画时间
+                .build();//构建完成
     }
 
 
@@ -80,12 +99,12 @@ public class PhotosMenuDetailPagerAdapater extends RecyclerView.Adapter<PhotosMe
         PhotosMenuDetailPagerBean.DataBean.NewsBean newsBean = datas.get(position);
         holder.tvTitle.setText(newsBean.getTitle());
         String imageUrl = ConstantUtils.BASE_URL + newsBean.getListimage();
-
-        Bitmap bitmap = bitmapCacheUtils.getBitmap(imageUrl,position);
+       /* Bitmap bitmap = bitmapCacheUtils.getBitmap(imageUrl, position);
         holder.ivIcon.setTag(position);
         if(bitmap != null){
             holder.ivIcon.setImageBitmap(bitmap);
-        }
+        }*/
+        ImageLoader.getInstance().displayImage(imageUrl, holder.ivIcon , options);
     }
 
 
@@ -107,11 +126,12 @@ public class PhotosMenuDetailPagerAdapater extends RecyclerView.Adapter<PhotosMe
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(context, PicassoSampleActivity.class);
-                    String url = ConstantUtils.BASE_URL+datas.get(getLayoutPosition()).getListimage();
+                    String url = ConstantUtils.BASE_URL + datas.get(getLayoutPosition()).getListimage();
                     intent.setData(Uri.parse(url));
                     context.startActivity(intent);
                 }
             });
         }
     }
+
 }

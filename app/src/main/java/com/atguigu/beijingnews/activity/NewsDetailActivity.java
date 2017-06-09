@@ -19,7 +19,6 @@ import com.atguigu.beijingnews.R;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
-import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.onekeyshare.OnekeyShare;
 
 public class NewsDetailActivity extends AppCompatActivity {
@@ -49,7 +48,7 @@ public class NewsDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news_detail);
         ButterKnife.inject(this);
-        ShareSDK.initSDK(this);
+
 
         setView();
 
